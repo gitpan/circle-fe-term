@@ -1,0 +1,125 @@
+#!/usr/bin/perl -w
+
+use strict;
+use warnings;
+
+use Error qw( :warndie );
+
+use Tickit::Async;
+use Tickit::Widget::Tabbed 0.005;
+use Tickit::Widget::VBox;
+
+use Net::Async::Tangence::Client 0.08;
+
+use Circle::FE::Term::Tab;
+use Circle::FE::Term::Ribbon;
+
+use IO::Async::Loop;
+
+use Text::Balanced qw( extract_bracketed );
+use Getopt::Long;
+
+my $loop = IO::Async::Loop->new();
+
+my $IDENTITY;
+
+GetOptions(
+   'identity|i=s' => \$IDENTITY,
+) or exit 1;
+
+my $URL = shift @ARGV or die "Need URL as argv[1]\n";
+
+if( !defined $IDENTITY ) {
+   my $hostname = `hostname -f`; chomp $hostname;
+   $IDENTITY = $ENV{USER} . "@" . $hostname . "/Term";
+}
+
+my $client = Net::Async::Tangence::Client->new(
+   identity => $IDENTITY,
+
+   on_closed => sub {
+      warn "Connection closed\n";
+      exit(0);
+   },
+
+   on_error => sub { warn "Received MSG_ERROR: $_[0]\n"; },
+);
+
+$loop->add( $client );
+
+my $t = Tickit::Async->new;
+
+$loop->add( $t );
+
+my $top_vbox = Tickit::Widget::VBox->new;
+
+# TODO: Consider a menubar
+
+my $tabbed = Tickit::Widget::Tabbed->new(
+   tab_position => "bottom",
+   pen_active   => Tickit::Pen->new( b => 1, u => 1 ),
+   tab_class    => "Circle::FE::Term::Tab",
+   ribbon_class => "Circle::FE::Term::Ribbon",
+);
+
+$t->bind_key( "C-n" => sub { $tabbed->next_tab } );
+$t->bind_key( "C-p" => sub { $tabbed->prev_tab } );
+
+$top_vbox->add( $tabbed, expand => 1 );
+
+$t->set_root_widget( $top_vbox );
+
+$client->connect_url( $URL,
+   on_root => sub {
+      my ( $rootobj ) = @_;
+
+      $rootobj->call_method(
+         method => "get_session",
+         args   => [ [ 'tabs' ] ],
+         on_result => sub {
+            my ( $session ) = @_;
+
+            $session->watch_property(
+               property => "tabs",
+               on_set => sub {
+                  my ( $objarray ) = @_;
+
+                  foreach my $obj ( @$objarray ) {
+                     $tabbed->add_tab( Tickit::Widget::VBox->new, object => $obj );
+                  }
+               },
+               on_push => sub {
+                  my @new = @_;
+                  foreach my $obj ( @new ) {
+                     $tabbed->add_tab( Tickit::Widget::VBox->new, object => $obj );
+                  }
+               },
+               on_shift => sub {
+                  my ( $count ) = @_;
+                  $tabbed->remove_tab( 0 ) for 1 .. $count;
+               },
+               on_splice => sub {
+                  my ( $index, $count, @objs ) = @_;
+
+                  # $count times, remove the one at $index, as they'll shuffle down
+                  $tabbed->remove_tab( $index ) for 1 .. $count;
+
+                  # TODO: I have no idea wtf is going on here
+                  foreach my $i ( 0 .. $#objs ) {
+                     my $obj = $objs[$i];
+                     die "TODO: insert tab\n";
+                  }
+               },
+               on_move => sub {
+                  my ( $index, $delta ) = @_;
+
+                  $tabbed->move_tab( $index, $delta );
+               },
+               want_initial => 1,
+            );
+         },
+      );
+   },
+);
+
+$t->run;
