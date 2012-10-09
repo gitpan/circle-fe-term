@@ -1,3 +1,7 @@
+#  You may distribute under the terms of the GNU General Public License
+#
+#  (C) Paul Evans, 2012 -- leonerd@leonerd.org.uk
+
 package Circle::FE::Term::Tab;
 
 use strict;
@@ -106,6 +110,14 @@ sub label
    return $self->{label};
 }
 
+sub label_short
+{
+   my $self = shift;
+   my $label = $self->label;
+   $label =~ s/([a-z0-9])([a-z0-9]+)/$1/gi;
+   return $label;
+}
+
 sub activated
 {
    my $self = shift;
@@ -179,4 +191,4 @@ sub get_theme_colour
    return undef;
 }
 
-1;
+0x55AA;

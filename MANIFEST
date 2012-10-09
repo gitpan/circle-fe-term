@@ -1,5 +1,6 @@
 bin/circle-fe-term
 Build.PL
+Changes
 lib/Circle/FE/Term.pm
 lib/Circle/FE/Term/Ribbon.pm
 lib/Circle/FE/Term/Tab.pm
@@ -7,10 +8,10 @@ lib/Circle/FE/Term/Widget/Box.pm
 lib/Circle/FE/Term/Widget/Entry.pm
 lib/Circle/FE/Term/Widget/Label.pm
 lib/Circle/FE/Term/Widget/Scroller.pm
-MANIFEST			This list of files
-share/circle-fe-term.theme
-Makefile.PL
-README
 LICENSE
-META.yml
+Makefile.PL
+MANIFEST			This list of files
 META.json
+META.yml
+README
+share/circle-fe-term.theme

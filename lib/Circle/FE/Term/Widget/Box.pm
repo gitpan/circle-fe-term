@@ -41,4 +41,4 @@ sub build
    return $widget;
 }
 
-1;
+0x55AA;

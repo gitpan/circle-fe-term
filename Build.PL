@@ -14,8 +14,11 @@ my $build = Module::Build->new(
       'String::Tagged' => 0,
       'Text::Balanced' => 0,
       'Tickit::Async' => 0,
+      'Tickit::Widget::Entry' => 0,
+      'Tickit::Widget::HBox' => 0,
       'Tickit::Widget::Scroller' => '0.04',
       'Tickit::Widget::Tabbed' => '0.005',
+      'Tickit::Widget::VBox' => 0,
    },
    auto_configure_requires => 0, # Don't add M::B to configure_requires
    share_dir => {

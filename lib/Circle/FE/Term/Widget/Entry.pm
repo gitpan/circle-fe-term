@@ -129,4 +129,4 @@ sub on_key
    $self->SUPER::on_key( @_ );
 }
 
-1;
+0x55AA;

@@ -7,11 +7,7 @@ package Circle::FE::Term;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
-
-1;
-
-__END__
+our $VERSION = '0.122820';
 
 =head1 NAME
 
@@ -20,3 +16,7 @@ C<Circle::FE::Term> - Terminal frontend for the C<Circle> application host
 =head1 AUTHOR
 
 Paul Evans <leonerd@leonerd.org.uk>
+
+=cut
+
+0x55AA;

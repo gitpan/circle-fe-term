@@ -199,4 +199,4 @@ sub thaw_updates
    $self->redraw if $self->{need_redraw}--;
 }
 
-1;
+0x55AA;

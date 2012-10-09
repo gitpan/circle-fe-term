@@ -1,3 +1,7 @@
+#  You may distribute under the terms of the GNU General Public License
+#
+#  (C) Paul Evans, 2012 -- leonerd@leonerd.org.uk
+
 package Circle::FE::Term::Ribbon;
 
 use strict;
@@ -7,6 +11,8 @@ use base qw( Tickit::Widget::Tabbed::Ribbon );
 
 package Circle::FE::Term::Ribbon::horizontal;
 use base qw( Circle::FE::Term::Ribbon );
+
+use feature qw( switch );
 
 use Tickit::Utils qw( textwidth );
 use List::Util qw( max first );
@@ -45,41 +51,79 @@ sub render
       $win->print( $printed = $active->index + 1, $active->pen );
       $col += textwidth $printed;
 
-      $win->print( $printed = sprintf ":%s |", $active->label );
+      $win->print( $printed = sprintf ":%s | ", $active->label );
       $col += textwidth $printed;
    }
 
-   if( grep { $_ != $active and $_->level > 0 } @tabs ) {
-      $win->print( " [", $self->activity_pen );
-      $col += 2;
+   my $rhs = sprintf " | total: %d", scalar @tabs;
+   my $rhswidth = textwidth $rhs;
 
-      my $first = 1;
+   if( grep { $_ != $active and $_->level > 0 } @tabs ) {
+      my @used;
+      # Output formats: [0] = full text
+      #                 [1] = initialise level<2 names
+      #                 [2] = initialise level<3 names
+      #                 [3] = initialise all names
+      #                 [4] = hide level<2 names, initialise others
+      #                 [5] = hide all names
 
       foreach my $idx ( 0 .. $#tabs ) {
          my $tab = $tabs[$idx];
          next if $tab == $active;
 
-         next if $tab->level == 0;
+         next unless my $level = $tab->level;
+
+         my $width_full    = textwidth sprintf "%d:%s", $idx + 1, $tab->label;
+         my $width_short = textwidth sprintf "%d:%s", $idx + 1, $tab->label_short;
+         my $width_hide   = textwidth sprintf "%d", $idx + 1;
+
+         $used[0] += 1 +              $width_full;
+         $used[1] += 1 + $level < 2 ? $width_short : $width_full;
+         $used[2] += 1 + $level < 3 ? $width_short : $width_full;
+         $used[3] += 1 +              $width_short;
+         $used[4] += 1 + $level < 2 ? $width_hide : $width_short;
+         $used[5] += 1 +              $width_hide;
+      }
+
+      my $space = $win->cols - $col - $rhswidth;
+
+      my $format = 0;
+      $format++ while $used[$format] > $space;
+
+      my $first = 1;
+
+      TAB: foreach my $idx ( 0 .. $#tabs ) {
+         my $tab = $tabs[$idx];
+         next if $tab == $active;
+
+         next unless my $level = $tab->level;
+
+         my $label;
+         
+         for( $format ) {
+            $label =             sprintf "%d:%s", $idx + 1, $tab->label;
+            when( 0 ) { ; }
+            when( 1 ) { $label = sprintf "%d:%s", $idx + 1, $tab->label_short if $level < 2 }
+            when( 2 ) { $label = sprintf "%d:%s", $idx + 1, $tab->label_short if $level < 3 }
+            $label =             sprintf "%d:%s", $idx + 1, $tab->label_short;
+            when( 3 ) { ; }
+            when( 4 ) { $label = sprintf "%d", $idx + 1 if $level < 3 }
+            when( 5 ) { $label = sprintf "%d", $idx + 1 }
+         }
 
          if( !$first ) {
             $win->print( ",", $self->activity_pen );
             $col++;
          }
 
-         my $label = sprintf "%d:%s", $idx + 1, $tab->label;
          $win->print( $label, $tab->pen );
          $col += textwidth $label;
 
          $first = 0;
       }
-
-      $win->print( "]", $self->activity_pen );
-      $col++;
    }
 
-   my $rhs = sprintf "| total: %d", scalar @tabs;
-
-   if( ( my $spare = $win->cols - $col - textwidth $rhs ) > 0 ) {
+   if( ( my $spare = $win->cols - $col - $rhswidth ) > 0 ) {
       $win->erasech( $spare, 1 );
    }
 
@@ -126,4 +170,4 @@ sub on_key
    return 0;
 }
 
-1;
+0x55AA;

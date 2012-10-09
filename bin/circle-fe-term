@@ -1,9 +1,11 @@
 #!/usr/bin/perl -w
 
+#  You may distribute under the terms of the GNU General Public License
+#
+#  (C) Paul Evans, 2010-2012 -- leonerd@leonerd.org.uk
+
 use strict;
 use warnings;
-
-use Error qw( :warndie );
 
 use Tickit::Async;
 use Tickit::Widget::Tabbed 0.005;
@@ -25,9 +27,34 @@ my $IDENTITY;
 
 GetOptions(
    'identity|i=s' => \$IDENTITY,
-) or exit 1;
+   'help' => sub { usage(0) },
+) or usage(1);
 
-my $URL = shift @ARGV or die "Need URL as argv[1]\n";
+sub usage
+{
+   my ( $exitcode ) = @_;
+
+   print { $exitcode ? \*STDERR : \*STDOUT } <<'EOF';
+circle-fe-term [options...] [URL]
+
+Options:
+
+   --identity, -i IDENTITY   Use the given session identity for reconnection
+
+URL should be one of:
+
+   sshunix://host/path/to/socket
+   sshexec://host/path/to/command?with+arguments
+   exec:///path/to/command?with+arguments
+   tcp://host:port/
+   unix:///path/to/socket
+
+EOF
+
+   exit $exitcode;
+}
+
+my $URL = shift @ARGV or usage(1);
 
 if( !defined $IDENTITY ) {
    my $hostname = `hostname -f`; chomp $hostname;
@@ -46,6 +73,11 @@ my $client = Net::Async::Tangence::Client->new(
 );
 
 $loop->add( $client );
+
+$client->connect_url( $URL );
+
+my $rootobj;
+$loop->loop_once until $rootobj = $client->rootobj;
 
 my $t = Tickit::Async->new;
 
@@ -69,55 +101,49 @@ $top_vbox->add( $tabbed, expand => 1 );
 
 $t->set_root_widget( $top_vbox );
 
-$client->connect_url( $URL,
-   on_root => sub {
-      my ( $rootobj ) = @_;
+$rootobj->call_method(
+   method => "get_session",
+   args   => [ [ 'tabs' ] ],
+   on_result => sub {
+      my ( $session ) = @_;
 
-      $rootobj->call_method(
-         method => "get_session",
-         args   => [ [ 'tabs' ] ],
-         on_result => sub {
-            my ( $session ) = @_;
+      $session->watch_property(
+         property => "tabs",
+         on_set => sub {
+            my ( $objarray ) = @_;
 
-            $session->watch_property(
-               property => "tabs",
-               on_set => sub {
-                  my ( $objarray ) = @_;
-
-                  foreach my $obj ( @$objarray ) {
-                     $tabbed->add_tab( Tickit::Widget::VBox->new, object => $obj );
-                  }
-               },
-               on_push => sub {
-                  my @new = @_;
-                  foreach my $obj ( @new ) {
-                     $tabbed->add_tab( Tickit::Widget::VBox->new, object => $obj );
-                  }
-               },
-               on_shift => sub {
-                  my ( $count ) = @_;
-                  $tabbed->remove_tab( 0 ) for 1 .. $count;
-               },
-               on_splice => sub {
-                  my ( $index, $count, @objs ) = @_;
-
-                  # $count times, remove the one at $index, as they'll shuffle down
-                  $tabbed->remove_tab( $index ) for 1 .. $count;
-
-                  # TODO: I have no idea wtf is going on here
-                  foreach my $i ( 0 .. $#objs ) {
-                     my $obj = $objs[$i];
-                     die "TODO: insert tab\n";
-                  }
-               },
-               on_move => sub {
-                  my ( $index, $delta ) = @_;
-
-                  $tabbed->move_tab( $index, $delta );
-               },
-               want_initial => 1,
-            );
+            foreach my $obj ( @$objarray ) {
+               $tabbed->add_tab( Tickit::Widget::VBox->new, object => $obj );
+            }
          },
+         on_push => sub {
+            my @new = @_;
+            foreach my $obj ( @new ) {
+               $tabbed->add_tab( Tickit::Widget::VBox->new, object => $obj );
+            }
+         },
+         on_shift => sub {
+            my ( $count ) = @_;
+            $tabbed->remove_tab( 0 ) for 1 .. $count;
+         },
+         on_splice => sub {
+            my ( $index, $count, @objs ) = @_;
+
+            # $count times, remove the one at $index, as they'll shuffle down
+            $tabbed->remove_tab( $index ) for 1 .. $count;
+
+            # TODO: I have no idea wtf is going on here
+            foreach my $i ( 0 .. $#objs ) {
+               my $obj = $objs[$i];
+               die "TODO: insert tab\n";
+            }
+         },
+         on_move => sub {
+            my ( $index, $delta ) = @_;
+
+            $tabbed->move_tab( $index, $delta );
+         },
+         want_initial => 1,
       );
    },
 );
