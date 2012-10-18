@@ -7,6 +7,8 @@ package Circle::FE::Term::Widget::Scroller;
 use strict;
 use constant type => "Scroller";
 
+use Circle::FE::Term;
+
 use Convert::Color 0.06;
 use Convert::Color::XTerm;
 use POSIX qw( strftime );
@@ -61,15 +63,15 @@ sub append_event
 
    my @time = localtime( $time );
 
-   my $datestamp = strftime( $tab->get_theme_var( "datestamp" ), @time );
-   my $timestamp = strftime( $tab->get_theme_var( "timestamp" ), @time );
+   my $datestamp = strftime( Circle::FE::Term->get_theme_var( "datestamp" ), @time );
+   my $timestamp = strftime( Circle::FE::Term->get_theme_var( "timestamp" ), @time );
 
    if( $datestamp ne $self->{last_datestamp} ) {
-      $self->append_formatted( $tab->get_theme_var( "datemessage" ), { datestamp => $datestamp } );
+      $self->append_formatted( Circle::FE::Term->get_theme_var( "datemessage" ), { datestamp => $datestamp } );
       $self->{last_datestamp} = $datestamp;
    }
 
-   my $format = $tab->get_theme_var( $event );
+   my $format = Circle::FE::Term->get_theme_var( $event );
    defined $format or $format = "No format defined for event $event";
 
    $self->append_formatted( $timestamp . $format, $args );
@@ -133,7 +135,7 @@ sub _apply_formatting
 
             foreach (qw( fg bg )) {
                defined $format{$_} or next;
-               $format{$_} = $self->_convert_colour( $self->{tab}->translate_theme_colour( $format{$_} ) );
+               $format{$_} = $self->_convert_colour( Circle::FE::Term->translate_theme_colour( $format{$_} ) );
             }
 
             $str->append_tagged( $text, %format );

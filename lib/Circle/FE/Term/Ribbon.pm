@@ -58,6 +58,8 @@ sub render
    my $rhs = sprintf " | total: %d", scalar @tabs;
    my $rhswidth = textwidth $rhs;
 
+   $self->{tabpos} = \my @tabpos;
+
    if( grep { $_ != $active and $_->level > 0 } @tabs ) {
       my @used;
       # Output formats: [0] = full text
@@ -73,9 +75,9 @@ sub render
 
          next unless my $level = $tab->level;
 
-         my $width_full    = textwidth sprintf "%d:%s", $idx + 1, $tab->label;
+         my $width_full  = textwidth sprintf "%d:%s", $idx + 1, $tab->label;
          my $width_short = textwidth sprintf "%d:%s", $idx + 1, $tab->label_short;
-         my $width_hide   = textwidth sprintf "%d", $idx + 1;
+         my $width_hide  = textwidth sprintf "%d", $idx + 1;
 
          $used[0] += 1 +              $width_full;
          $used[1] += 1 + $level < 2 ? $width_short : $width_full;
@@ -87,8 +89,14 @@ sub render
 
       my $space = $win->cols - $col - $rhswidth;
 
-      my $format = 0;
-      $format++ while $used[$format] > $space;
+      my $format;
+      if( Circle::FE::Term->get_theme_var( "label_format" ) eq "name_and_number" ) {
+         $format = 0;
+         $format++ while $used[$format] > $space;
+      }
+      else {
+         $format = 5;
+      }
 
       my $first = 1;
 
@@ -107,7 +115,7 @@ sub render
             when( 2 ) { $label = sprintf "%d:%s", $idx + 1, $tab->label_short if $level < 3 }
             $label =             sprintf "%d:%s", $idx + 1, $tab->label_short;
             when( 3 ) { ; }
-            when( 4 ) { $label = sprintf "%d", $idx + 1 if $level < 3 }
+            when( 4 ) { $label = sprintf "%d", $idx + 1 if $level < 2 }
             when( 5 ) { $label = sprintf "%d", $idx + 1 }
          }
 
@@ -117,7 +125,11 @@ sub render
          }
 
          $win->print( $label, $tab->pen );
-         $col += textwidth $label;
+         my $width = textwidth $label;
+
+         push @tabpos, [ $idx, $col, $width ]; 
+
+         $col += $width;
 
          $first = 0;
       }
@@ -163,11 +175,30 @@ sub on_key
    }
    elsif( $type eq "key" and $str =~ m/^M-(.)$/ and
           ( my $idx = index $tab_shortcuts, $1 ) > -1 ) {
-      $self->activate_tab( $idx );
+      eval { $self->activate_tab( $idx ) }; # ignore croak on invalid index
       return 1;
    }
 
    return 0;
+}
+
+sub on_mouse
+{
+   my $self = shift;
+   my ( $ev, $button, $line, $col ) = @_;
+
+   return 0 unless $line == 0;
+
+   if( $ev eq "press" and $button == 1 ) {
+      foreach my $pos ( @{ $self->{tabpos} } ) {
+         $self->activate_tab( $pos->[0] ), return 1 if $col >= $pos->[1] and $col < $pos->[1] + $pos->[2];
+      }
+   }
+   elsif( $ev eq "wheel" ) {
+      $self->prev_tab if $button eq "up";
+      $self->next_tab if $button eq "down";
+      return 1;
+   }
 }
 
 0x55AA;

@@ -29,6 +29,8 @@ datestamp=%Y/%m/%d
 
 datemessage={fg:#55F {fg:#0DD --:--}} {indent Day is now $datestamp}
 
+label_format=name_and_number
+
 # Generic events
 response={fg:white -{fg:blue !}-} {indent $text}
 warning={fg:white -{fg:#FB2 {b !}}-} {fg:#FB2 {indent $text}}
