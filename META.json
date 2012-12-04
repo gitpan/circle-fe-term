@@ -4,7 +4,7 @@
       "Paul Evans <leonerd@leonerd.org.uk>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4001, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "Module::Build version 0.4001, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "open_source"
    ],
@@ -26,7 +26,7 @@
             "Tickit::Async" : "0",
             "Tickit::Widget::Entry" : "0",
             "Tickit::Widget::HBox" : "0",
-            "Tickit::Widget::Scroller" : "0.04",
+            "Tickit::Widget::Scroller" : "0.09",
             "Tickit::Widget::Tabbed" : "0.005",
             "Tickit::Widget::VBox" : "0"
          }
@@ -35,7 +35,7 @@
    "provides" : {
       "Circle::FE::Term" : {
          "file" : "lib/Circle/FE/Term.pm",
-         "version" : "0.122910"
+         "version" : "0.123380"
       },
       "Circle::FE::Term::Ribbon" : {
          "file" : "lib/Circle/FE/Term/Ribbon.pm",
@@ -80,5 +80,5 @@
          "http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt"
       ]
    },
-   "version" : "0.122910"
+   "version" : "0.123380"
 }

@@ -1,5 +1,12 @@
 Revision history for Circle-FE-Term
 
+0.123380 CHANGES:
+         * Handle slow Alt+letter or separately typed Escape letter
+           combinations by some currently-hacky logic around the on_key
+           handler and an on-screen indicator.
+         * Display a scrolling indicator showing the number of lines scrolled
+           and whether more content has been added since scrolling.
+
 0.122910 CHANGES:
          * Handle mouse input on activity ribbon
          * Futher bugfixes to ribbon label compression logic

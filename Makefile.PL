@@ -15,7 +15,7 @@ WriteMakefile
                    'Tickit::Async' => 0,
                    'Tickit::Widget::Entry' => 0,
                    'Tickit::Widget::HBox' => 0,
-                   'Tickit::Widget::Scroller' => '0.04',
+                   'Tickit::Widget::Scroller' => '0.09',
                    'Tickit::Widget::Tabbed' => '0.005',
                    'Tickit::Widget::VBox' => 0
                  },

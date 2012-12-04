@@ -83,6 +83,51 @@ my $t = Tickit::Async->new;
 
 $loop->add( $t );
 
+# Haaaaack. Think about how to do this nicer.
+my $esc_held;
+my $esc_indicator_window =$t->rootwin->make_float( 0, 0, 1, 4 );
+$esc_indicator_window->hide;
+$esc_indicator_window->pen->chattr( rv => 1 );
+$esc_indicator_window->set_on_expose( sub {
+   my $win = shift;
+   $win->goto( 0, 0 );
+   $win->print( "ESC-" );
+} );
+my $esc_timer = IO::Async::Timer::Countdown->new(
+   delay => 3,
+   on_expire => sub {
+      $esc_held = 0;
+      $esc_indicator_window->hide;
+   },
+);
+$t->add_child( $esc_timer );
+
+my $old_on_key = Tickit->can( "on_key" );
+no warnings 'redefine';
+*Tickit::on_key = sub {
+   my $self = shift;
+   my ( $type, $str ) = @_;
+
+   if( $esc_held ) {
+      $str = "M-$str";
+      $type = "key";
+
+      $esc_held = 0;
+      $esc_indicator_window->hide;
+      $esc_timer->stop;
+   }
+
+   return 1 if $old_on_key->( $self, $type, $str );
+
+   if( $type eq "key" and $str eq "Escape" ) {
+      $esc_held = 1;
+      $esc_indicator_window->reposition( $t->rootwin->lines - 1, 0 );
+      $esc_indicator_window->show;
+      $esc_timer->start;
+   }
+};
+# End Haaaaack
+
 my $top_vbox = Tickit::Widget::VBox->new;
 
 # TODO: Consider a menubar

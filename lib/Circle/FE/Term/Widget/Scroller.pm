@@ -35,9 +35,7 @@ sub build
       property => "displayevents",
       on_set => sub {
          $widget->clear_lines;
-         $widget->freeze_updates;
          $self->append_event( $_ ) for @{ $_[0] };
-         $widget->thaw_updates;
          $widget->scroll_to_bottom;
       },
       on_push => sub {
@@ -174,8 +172,16 @@ sub _apply_formatting
 package Circle::FE::Term::Widget::Scroller::Widget;
 
 use base qw( Tickit::Widget::Scroller );
-Tickit::Widget::Scroller->VERSION( 0.04 );
+Tickit::Widget::Scroller->VERSION( 0.09 );
 use Tickit::Widget::Scroller::Item::RichText;
+
+sub new
+{
+   my $class = shift;
+   return $class->SUPER::new( @_,
+      gen_bottom_indicator => "gen_bottom_indicator"
+   );
+}
 
 sub clear_lines
 {
@@ -188,17 +194,32 @@ sub clear_lines
    $window->restore;
 }
 
-sub freeze_updates
+sub push
 {
    my $self = shift;
-   $self->{frozen} = 1;
+   my $below_before = $self->lines_below;
+   $self->SUPER::push( @_ );
+   if( $below_before ) {
+      $self->{more_count} += $self->lines_below - $below_before;
+      $self->update_indicators;
+   }
 }
 
-sub thaw_updates
+sub gen_bottom_indicator
 {
    my $self = shift;
-   $self->{frozen} = 0;
-   $self->redraw if $self->{need_redraw}--;
+   my $below = $self->lines_below;
+   if( !$below ) {
+      undef $self->{more_count};
+      return;
+   }
+
+   if( $self->{more_count} ) {
+      return sprintf "-- +%d [%d more] --", $below - $self->{more_count}, $self->{more_count};
+   }
+   else {
+      return sprintf "-- +%d --", $below;
+   }
 }
 
 0x55AA;
