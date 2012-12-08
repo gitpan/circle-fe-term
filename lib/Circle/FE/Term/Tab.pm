@@ -60,6 +60,13 @@ sub new
       want_initial => 1,
    );
 
+   $object->subscribe_event(
+      event => "raise",
+      on_fire => sub {
+         $self->activate;
+      },
+   );
+
    # TODO: weasel
    $self->set_on_activated( sub { $self->activated } );
 

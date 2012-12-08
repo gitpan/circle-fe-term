@@ -7,7 +7,7 @@ package Circle::FE::Term;
 use strict;
 use warnings;
 
-our $VERSION = '0.123380';
+our $VERSION = '0.123420';
 
 use File::ShareDir qw( dist_file );
 

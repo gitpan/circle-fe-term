@@ -1,5 +1,9 @@
 Revision history for Circle-FE-Term
 
+0.123420 CHANGES:
+         * Handle tab-completion hints from BE
+         * Handle window raise requests
+
 0.123380 CHANGES:
          * Handle slow Alt+letter or separately typed Escape letter
            combinations by some currently-hacky logic around the on_key
