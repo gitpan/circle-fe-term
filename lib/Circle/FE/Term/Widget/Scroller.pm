@@ -1,10 +1,11 @@
 #  You may distribute under the terms of the GNU General Public License
 #
-#  (C) Paul Evans, 2010-2012 -- leonerd@leonerd.org.uk
+#  (C) Paul Evans, 2010-2013 -- leonerd@leonerd.org.uk
 
 package Circle::FE::Term::Widget::Scroller;
 
 use strict;
+use feature qw( switch );
 use constant type => "Scroller";
 
 use Circle::FE::Term;
@@ -14,6 +15,7 @@ use Convert::Color::XTerm;
 use POSIX qw( strftime );
 use String::Tagged;
 use Text::Balanced qw( extract_bracketed );
+use Tangence::ObjectProxy '0.16'; # watch with iterators
 
 # Guess that we can do 256 colours on xterm or any -256color terminal
 my $AS_TERM = ( $ENV{TERM} eq "xterm" or $ENV{TERM} =~ m/-256color$/ ) ? "as_xterm" : "as_vga";
@@ -31,29 +33,56 @@ sub build
       last_datestamp => "",
    };
 
+   # Fetch in chunks of the height of the window, so the first chunk looks instant
+   my $chunksize = $tab->widget->window->lines;
+   my $iter;
+   my $idx;
+   my $on_iter_more;
+
    $obj->watch_property(
       property => "displayevents",
+      iter_from => "last",
+      on_iter => sub {
+         ( $iter, undef, my $max ) = @_;
+
+         $on_iter_more = sub {
+            ( $idx, my @more ) = @_;
+            $self->insert_event( top => $_ ) for reverse @more;
+
+            my $remaining = $idx;
+            $remaining = $chunksize if $remaining > $chunksize;
+
+            if( $remaining ) {
+               $iter->next_backward( count => $remaining, on_more => $on_iter_more );
+            }
+            else {
+               undef $iter;
+               undef $on_iter_more;
+            }
+         };
+
+         $on_iter_more->( $max + 1, () );
+      },
       on_set => sub {
-         $widget->clear_lines;
-         $self->append_event( $_ ) for @{ $_[0] };
-         $widget->scroll_to_bottom;
+         die "This should not happen\n";
       },
       on_push => sub {
-         $self->append_event( $_ ) for @_;
+         $self->insert_event( bottom => $_ ) for @_;
       },
       on_shift => sub {
-         $widget->shift( $_[0] );
+         my ( $count ) = @_;
+         $count -= $idx;
+         $widget->shift( $count ) if $count > 0;
       },
-      want_initial => 1,
    );
 
    return $widget;
 }
 
-sub append_event
+sub insert_event
 {
    my $self = shift;
-   my ( $ev ) = @_;
+   my ( $end, $ev ) = @_;
 
    my ( $event, $time, $args ) = @$ev;
 
@@ -64,18 +93,31 @@ sub append_event
    my $datestamp = strftime( Circle::FE::Term->get_theme_var( "datestamp" ), @time );
    my $timestamp = strftime( Circle::FE::Term->get_theme_var( "timestamp" ), @time );
 
-   if( $datestamp ne $self->{last_datestamp} ) {
-      $self->append_formatted( Circle::FE::Term->get_theme_var( "datemessage" ), { datestamp => $datestamp } );
-      $self->{last_datestamp} = $datestamp;
-   }
-
    my $format = Circle::FE::Term->get_theme_var( $event );
    defined $format or $format = "No format defined for event $event";
 
-   $self->append_formatted( $timestamp . $format, $args );
+   my @items = ( $self->format_event( $timestamp . $format, $args ) );
+
+   my $widget = $self->{widget};
+   given( $end ) {
+      when( "bottom" ) {
+         unshift @items, $self->format_event( Circle::FE::Term->get_theme_var( "datemessage" ), { datestamp => $datestamp } )
+            if $datestamp ne $self->{last_datestamp};
+
+         $widget->push( @items );
+      }
+      when( "top" ) {
+         push @items, $self->format_event( Circle::FE::Term->get_theme_var( "datemessage" ), { datestamp => $self->{last_datestamp} } )
+            if $datestamp ne $self->{last_datestamp} and length $self->{last_datestamp};
+
+         $widget->unshift( @items );
+      }
+   }
+
+   $self->{last_datestamp} = $datestamp;
 }
 
-sub append_formatted
+sub format_event
 {
    my $self = shift;
    my ( $format, $args ) = @_;
@@ -90,8 +132,7 @@ sub append_formatted
       $indent = $extent->end;
    }
 
-   my $widget = $self->{widget};
-   $widget->push( Tickit::Widget::Scroller::Item::RichText->new( $str, indent => $indent ) );
+   return Tickit::Widget::Scroller::Item::RichText->new( $str, indent => $indent );
 }
 
 my %colourcache;
@@ -172,7 +213,7 @@ sub _apply_formatting
 package Circle::FE::Term::Widget::Scroller::Widget;
 
 use base qw( Tickit::Widget::Scroller );
-Tickit::Widget::Scroller->VERSION( 0.09 );
+Tickit::Widget::Scroller->VERSION( 0.10 ); # ->unshift
 use Tickit::Widget::Scroller::Item::RichText;
 
 sub new

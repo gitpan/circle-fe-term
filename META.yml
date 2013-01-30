@@ -13,7 +13,7 @@ name: circle-fe-term
 provides:
   Circle::FE::Term:
     file: lib/Circle/FE/Term.pm
-    version: 0.123420
+    version: 0.130290
   Circle::FE::Term::Ribbon:
     file: lib/Circle/FE/Term/Ribbon.pm
     version: 0
@@ -48,13 +48,15 @@ requires:
   IO::Async: 0.14
   Net::Async::Tangence::Client: 0.08
   String::Tagged: 0
+  Tangence::ObjectProxy: 0.16
   Text::Balanced: 0
   Tickit::Async: 0
+  Tickit::Term: 0.27
   Tickit::Widget::Entry: 0
   Tickit::Widget::HBox: 0
-  Tickit::Widget::Scroller: 0.09
-  Tickit::Widget::Tabbed: 0.005
+  Tickit::Widget::Scroller: 0.10
+  Tickit::Widget::Tabbed: 0.008
   Tickit::Widget::VBox: 0
 resources:
   license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
-version: 0.123420
+version: 0.130290

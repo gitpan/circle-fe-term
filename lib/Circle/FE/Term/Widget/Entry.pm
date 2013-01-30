@@ -151,8 +151,10 @@ sub on_key
 
    my $ret = $self->SUPER::on_key( @_ );
 
-   if( $redo_tab_complete and $_[0] eq "text" ) {
-      $self->tab_complete;
+   if( $redo_tab_complete ) {
+      if( $_[0] eq "text" or $_[1] eq "Backspace" ) {
+         $self->tab_complete;
+      }
    }
 
    return $ret;
@@ -165,7 +167,7 @@ sub tab_complete
    my $obj = $widget->{obj};
 
    my ( $partial ) = substr( $widget->text, 0, $widget->position ) =~ m/(\S*)$/;
-   my $plen = length $partial;
+   my $plen = length $partial or return;
 
    my $at_sol = ( $widget->position - $plen ) == 0;
 

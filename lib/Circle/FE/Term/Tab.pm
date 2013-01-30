@@ -8,6 +8,9 @@ use strict;
 use warnings;
 
 use base qw( Tickit::Widget::Tabbed::Tab );
+Tickit::Widget::Tabbed->VERSION( '0.008' );
+
+use Tickit::Term 0.27; # setctl_str
 
 use Circle::FE::Term;
 
@@ -42,6 +45,7 @@ sub new
 
    $self = $class->SUPER::new( $tabbed, %args );
    $self->{object} = $object;
+   $self->{term} = $tabbed->window->term;
 
    $object->call_method(
       method => "get_widget",
@@ -67,8 +71,7 @@ sub new
       },
    );
 
-   # TODO: weasel
-   $self->set_on_activated( sub { $self->activated } );
+   $self->set_on_activated( 'activated' );
 
    return $self;
 }
@@ -138,6 +141,11 @@ sub activated
          on_result => sub {}, # ignore
       );
    }
+
+   my $tag = $object->prop("tag") // "Global";
+   my $title = sprintf "%s - %s", $tag, "Circle";
+
+   $self->{term}->setctl_str( icontitle_text => $title );
 }
 
 0x55AA;
