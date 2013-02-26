@@ -1,6 +1,6 @@
 #  You may distribute under the terms of the GNU General Public License
 #
-#  (C) Paul Evans, 2012 -- leonerd@leonerd.org.uk
+#  (C) Paul Evans, 2012-2013 -- leonerd@leonerd.org.uk
 
 package Circle::FE::Term::Tab;
 
@@ -29,7 +29,7 @@ sub new
    my $object = delete $args{object};
    my $self;
 
-   if( $object->proxy_isa( "Circle::RootObj" ) ) {
+   if( $object->proxy_isa( "Circle.RootObj" ) ) {
       $args{label} = "Global";
    }
    else {
@@ -82,7 +82,7 @@ sub build_widget
    my ( $obj ) = @_;
 
    foreach my $type ( widgets ) {
-      next unless $obj->proxy_isa( "Circle::Widget::" . $type->type );
+      next unless $obj->proxy_isa( "Circle.Widget." . $type->type );
       return $type->build( $obj, $self );
    }
 

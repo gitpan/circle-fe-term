@@ -22,7 +22,7 @@
             "IO::Async" : "0.14",
             "Net::Async::Tangence::Client" : "0.08",
             "String::Tagged" : "0",
-            "Tangence::ObjectProxy" : "0.16",
+            "Tangence::ObjectProxy" : "0.18",
             "Text::Balanced" : "0",
             "Tickit::Async" : "0",
             "Tickit::Term" : "0.27",
@@ -37,7 +37,7 @@
    "provides" : {
       "Circle::FE::Term" : {
          "file" : "lib/Circle/FE/Term.pm",
-         "version" : "0.130290"
+         "version" : "0.130560"
       },
       "Circle::FE::Term::Ribbon" : {
          "file" : "lib/Circle/FE/Term/Ribbon.pm",
@@ -82,5 +82,5 @@
          "http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt"
       ]
    },
-   "version" : "0.130290"
+   "version" : "0.130560"
 }

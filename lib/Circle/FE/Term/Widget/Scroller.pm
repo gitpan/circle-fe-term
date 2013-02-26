@@ -31,6 +31,7 @@ sub build
       tab    => $tab,
       widget => $widget,
       last_datestamp => "",
+      last_datestamp_top => "",
    };
 
    # Fetch in chunks of the height of the window, so the first chunk looks instant
@@ -105,16 +106,17 @@ sub insert_event
             if $datestamp ne $self->{last_datestamp};
 
          $widget->push( @items );
+         $self->{last_datestamp} = $datestamp;
       }
       when( "top" ) {
-         push @items, $self->format_event( Circle::FE::Term->get_theme_var( "datemessage" ), { datestamp => $self->{last_datestamp} } )
-            if $datestamp ne $self->{last_datestamp} and length $self->{last_datestamp};
+         push @items, $self->format_event( Circle::FE::Term->get_theme_var( "datemessage" ), { datestamp => $self->{last_datestamp_top} } )
+            if $datestamp ne $self->{last_datestamp_top} and length $self->{last_datestamp_top};
 
          $widget->unshift( @items );
+         $self->{last_datestamp_top} = $datestamp;
+         $self->{last_datestamp} = $datestamp if !length $self->{last_datestamp};
       }
    }
-
-   $self->{last_datestamp} = $datestamp;
 }
 
 sub format_event

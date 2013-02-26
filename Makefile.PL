@@ -11,7 +11,7 @@ WriteMakefile
                    'IO::Async' => '0.14',
                    'Net::Async::Tangence::Client' => '0.08',
                    'String::Tagged' => 0,
-                   'Tangence::ObjectProxy' => '0.16',
+                   'Tangence::ObjectProxy' => '0.18',
                    'Text::Balanced' => 0,
                    'Tickit::Async' => 0,
                    'Tickit::Term' => '0.27',

@@ -1,5 +1,10 @@
 Revision history for Circle-FE-Term
 
+0.130560 CHANGES:
+         * Bugfix for datestamp display when backfilling
+         * Use new circle-be's irc.mode $moder argument
+         * Updated for Tangence 0.18
+
 0.130290 CHANGES:
          * Fetch window backfill in the background, from the bottom upwards.
          * Set terminal window title to window item name
