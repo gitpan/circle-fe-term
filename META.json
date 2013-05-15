@@ -6,7 +6,7 @@
    "dynamic_config" : 1,
    "generated_by" : "Module::Build version 0.4001, CPAN::Meta::Converter version 2.120921",
    "license" : [
-      "open_source"
+      "perl_5"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -24,20 +24,21 @@
             "String::Tagged" : "0",
             "Tangence::ObjectProxy" : "0.18",
             "Text::Balanced" : "0",
+            "Tickit" : "0.32",
             "Tickit::Async" : "0",
             "Tickit::Term" : "0.27",
-            "Tickit::Widget::Entry" : "0",
-            "Tickit::Widget::HBox" : "0",
+            "Tickit::Widget::Entry" : "0.20",
+            "Tickit::Widget::HBox" : "0.32",
             "Tickit::Widget::Scroller" : "0.10",
             "Tickit::Widget::Tabbed" : "0.008",
-            "Tickit::Widget::VBox" : "0"
+            "Tickit::Widget::VBox" : "0.31"
          }
       }
    },
    "provides" : {
       "Circle::FE::Term" : {
          "file" : "lib/Circle/FE/Term.pm",
-         "version" : "0.130560"
+         "version" : "0.131340"
       },
       "Circle::FE::Term::Ribbon" : {
          "file" : "lib/Circle/FE/Term/Ribbon.pm",
@@ -79,8 +80,8 @@
    "release_status" : "stable",
    "resources" : {
       "license" : [
-         "http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt"
+         "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.130560"
+   "version" : "0.131340"
 }

@@ -90,13 +90,14 @@ sub render
       my $space = $win->cols - $col - $rhswidth;
 
       my $format;
-      if( Circle::FE::Term->get_theme_var( "label_format" ) eq "name_and_number" ) {
-         $format = 0;
-         $format++ while $used[$format] > $space;
+      given( Circle::FE::Term->get_theme_var( "label_format" ) ) {
+         when( "name_and_number" ) { $format = 0 }
+         when( "initial" )         { $format = 3 }
+         when( "number" )          { $format = 5 }
+         default                   { die "Unrecognised label_format $_"; $format = 0 }
       }
-      else {
-         $format = 5;
-      }
+
+      $format++ while $format < $#used and $used[$format] > $space;
 
       my $first = 1;
 

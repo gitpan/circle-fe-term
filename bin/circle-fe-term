@@ -106,20 +106,23 @@ my $old_on_key = Tickit->can( "on_key" );
 no warnings 'redefine';
 *Tickit::on_key = sub {
    my $self = shift;
-   my ( $type, $str ) = @_;
+   my ( $args ) = @_;
 
    if( $esc_held ) {
-      $str = "M-$str";
-      $type = "key";
+      $args = {
+         type => "key",
+         str  => "M-$args->{str}",
+         mod  => $args->{mod} | 2,
+      };
 
       $esc_held = 0;
       $esc_indicator_window->hide;
       $esc_timer->stop;
    }
 
-   return 1 if $old_on_key->( $self, $type, $str );
+   return 1 if $old_on_key->( $self, $args );
 
-   if( $type eq "key" and $str eq "Escape" ) {
+   if( $args->{type} eq "key" and $args->{str} eq "Escape" ) {
       $esc_held = 1;
       $esc_indicator_window->reposition( $t->rootwin->lines - 1, 0 );
       $esc_indicator_window->show;

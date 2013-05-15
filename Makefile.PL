@@ -13,17 +13,19 @@ WriteMakefile
                    'String::Tagged' => 0,
                    'Tangence::ObjectProxy' => '0.18',
                    'Text::Balanced' => 0,
+                   'Tickit' => '0.32',
                    'Tickit::Async' => 0,
                    'Tickit::Term' => '0.27',
-                   'Tickit::Widget::Entry' => 0,
-                   'Tickit::Widget::HBox' => 0,
+                   'Tickit::Widget::Entry' => '0.20',
+                   'Tickit::Widget::HBox' => '0.32',
                    'Tickit::Widget::Scroller' => '0.10',
                    'Tickit::Widget::Tabbed' => '0.008',
-                   'Tickit::Widget::VBox' => 0
+                   'Tickit::Widget::VBox' => '0.31'
                  },
   'INSTALLDIRS' => 'site',
   'EXE_FILES' => [
-                   'bin/circle-fe-term'
+                   'bin/circle-fe-term',
+                   'bin/circle-fe-term.~1~'
                  ],
   'PL_FILES' => {}
 )

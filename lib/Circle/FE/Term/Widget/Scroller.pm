@@ -25,7 +25,10 @@ sub build
    my $class = shift;
    my ( $obj, $tab ) = @_;
 
-   my $widget = Circle::FE::Term::Widget::Scroller::Widget->new( gravity => "bottom" );
+   my $widget = Circle::FE::Term::Widget::Scroller::Widget->new(
+      classes => $obj->prop( "classes" ),
+      gravity => "bottom",
+   );
 
    my $self = bless {
       tab    => $tab,

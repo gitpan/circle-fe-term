@@ -1,5 +1,13 @@
 Revision history for Circle-FE-Term
 
+0.131340 CHANGES:
+         * Updated for Tickit 0.32:
+            + Widget attributes from Tickit::Style
+            + Fix for new Tickit::on_key handling logic
+         * Allow an initials-only ribbon mode
+         * Bugfix for tab-complete logic when possibilities include prefixes
+           of each other
+
 0.130560 CHANGES:
          * Bugfix for datestamp display when backfilling
          * Use new circle-be's irc.mode $moder argument

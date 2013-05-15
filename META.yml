@@ -5,7 +5,7 @@ author:
 build_requires: {}
 dynamic_config: 1
 generated_by: 'Module::Build version 0.4001, CPAN::Meta::Converter version 2.120921'
-license: open_source
+license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
@@ -13,7 +13,7 @@ name: circle-fe-term
 provides:
   Circle::FE::Term:
     file: lib/Circle/FE/Term.pm
-    version: 0.130560
+    version: 0.131340
   Circle::FE::Term::Ribbon:
     file: lib/Circle/FE/Term/Ribbon.pm
     version: 0
@@ -50,13 +50,14 @@ requires:
   String::Tagged: 0
   Tangence::ObjectProxy: 0.18
   Text::Balanced: 0
+  Tickit: 0.32
   Tickit::Async: 0
   Tickit::Term: 0.27
-  Tickit::Widget::Entry: 0
-  Tickit::Widget::HBox: 0
+  Tickit::Widget::Entry: 0.20
+  Tickit::Widget::HBox: 0.32
   Tickit::Widget::Scroller: 0.10
   Tickit::Widget::Tabbed: 0.008
-  Tickit::Widget::VBox: 0
+  Tickit::Widget::VBox: 0.31
 resources:
-  license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
-version: 0.130560
+  license: http://dev.perl.org/licenses/
+version: 0.131340

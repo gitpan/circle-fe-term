@@ -1,6 +1,6 @@
 #  You may distribute under the terms of the GNU General Public License
 #
-#  (C) Paul Evans, 2010-2011 -- leonerd@leonerd.org.uk
+#  (C) Paul Evans, 2010-2013 -- leonerd@leonerd.org.uk
 
 package Circle::FE::Term::Widget::Box;
 
@@ -18,10 +18,14 @@ sub build
    my $orientation = $obj->prop("orientation");
    my $widget;
    if( $orientation eq "vertical" ) {
-      $widget = Tickit::Widget::VBox->new;
+      $widget = Tickit::Widget::VBox->new(
+         classes => $obj->prop( "classes" ),
+      );
    }
    elsif( $orientation eq "horizontal" ) {
-      $widget = Tickit::Widget::HBox->new( spacing => 1, bg => 4 );
+      $widget = Tickit::Widget::HBox->new(
+         classes => $obj->prop( "classes" ),
+      );
    }
    else {
       die "Unrecognised orientation '$orientation'";
@@ -40,5 +44,13 @@ sub build
 
    return $widget;
 }
+
+Tickit::Style->load_style( <<'EOF' );
+HBox.status {
+  spacing: 1;
+  bg: "blue";
+}
+
+EOF
 
 0x55AA;

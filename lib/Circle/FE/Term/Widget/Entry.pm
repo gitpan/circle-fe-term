@@ -1,6 +1,6 @@
 #  You may distribute under the terms of the GNU General Public License
 #
-#  (C) Paul Evans, 2010 -- leonerd@leonerd.org.uk
+#  (C) Paul Evans, 2010-2013 -- leonerd@leonerd.org.uk
 
 package Circle::FE::Term::Widget::Entry;
 
@@ -18,6 +18,7 @@ sub build
    my $history_index;
 
    my $widget = Circle::FE::Term::Widget::Entry::Widget->new(
+      classes => $obj->prop( "classes" ),
       tab => $tab,
 
       on_enter => sub {
@@ -116,6 +117,13 @@ sub build
 
    return $widget;
 }
+
+Tickit::Style->load_style( <<'EOF' );
+Entry.topic {
+  bg: "blue";
+}
+
+EOF
 
 package Circle::FE::Term::Widget::Entry::Widget;
 
@@ -229,10 +237,13 @@ sub tab_complete
       $popup->set_on_expose( sub {
          my $win = shift;
          foreach my $line ( 0 .. $#possibles ) {
+            my $str = $possibles[$line];
+
             $win->goto( $line, 0 );
+
             my $col = 0;
-            $col += $win->print( substr( $possibles[$line], 0, $plen + 1 ), u => 1 )->columns;
-            $col += $win->print( substr( $possibles[$line], $plen + 1 ) )->columns;
+            $col += $win->print( substr( $str, 0, $plen + 1 ), u => 1 )->columns;
+            $col += $win->print( substr( $str, $plen + 1 ) )->columns if length $str > $plen + 1;
             $win->erasech( $win->cols - $col );
          }
       } );
