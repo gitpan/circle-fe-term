@@ -17,6 +17,8 @@ sub build
    my $prehistory;
    my $history_index;
 
+   my $pending_count = 0;
+
    my $widget = Circle::FE::Term::Widget::Entry::Widget->new(
       classes => $obj->prop( "classes" ),
       tab => $tab,
@@ -24,15 +26,23 @@ sub build
       on_enter => sub {
          my ( $self, $line ) = @_;
 
+         $pending_count++;
+         $self->send_pending( $pending_count );
+
          $obj->call_method(
             method => "enter",
             args => [ $self->text ],
 
-            on_result => sub {}, # IGNORE
+            on_result => sub {
+               $pending_count--;
+               $self->send_pending( $pending_count );
+            },
 
             on_error => sub {
                my ( $message ) = @_;
                # TODO: write the error message somewhere
+               $pending_count--;
+               $self->send_pending( $pending_count );
             },
          );
 
@@ -251,6 +261,40 @@ sub tab_complete
       $popup->show;
 
       $widget->{tab_complete_popup} = $popup;
+   }
+}
+
+sub send_pending
+{
+   my $self = shift;
+   my ( $count ) = @_;
+
+   $self->{pending_count} = $count;
+
+   if( $count ) {
+      my $win = $self->{pending_window} ||= do {
+         my $win = $self->window->make_hidden_sub( 0, $self->window->cols - 12, 1, 12 );
+         my $countr = \$self->{pending_count};
+         $win->set_on_expose( sub {
+            $win->goto( 0, 0 );
+            my $col = $win->print( "Sending $$countr..." )->columns;
+            $win->erasech( 12 - $col, undef );
+         });
+         $win->pen->chattrs({ fg => "black", bg => "cyan", i => 1 });
+         $win;
+      };
+
+      if( !$win->is_visible ) {
+         # TODO: Use Tickit->timer when it comes out
+         $win->tickit->loop->watch_time( after => 0.5, code => sub {
+            $win->show if $self->{pending_count} and !$win->is_visible;
+         });
+      }
+
+      $win->expose if $win->is_visible;
+   }
+   elsif( my $win = $self->{pending_window} ) {
+      $win->hide;
    }
 }
 

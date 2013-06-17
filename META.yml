@@ -13,7 +13,7 @@ name: circle-fe-term
 provides:
   Circle::FE::Term:
     file: lib/Circle/FE/Term.pm
-    version: 0.131340
+    version: 0.131670
   Circle::FE::Term::Ribbon:
     file: lib/Circle/FE/Term/Ribbon.pm
     version: 0
@@ -60,4 +60,4 @@ requires:
   Tickit::Widget::VBox: 0.31
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.131340
+version: 0.131670

@@ -41,7 +41,7 @@ text=$text
 
 # IRC events
 irc.irc={fg:red <$prefix>} $command $args
-irc.text={fg:darkcyan -{fg:white $server}-} $text
+irc.text={fg:cyan -{fg:white $server}-} $text
 
 irc.motd={fg:blue MOTD:} $text
 
@@ -51,6 +51,8 @@ irc.kick={fg:#806000 ***} {fg:#FB3 Kicks:} {indent }{fg:#0DD $kicked} {fg:#888 [
 irc.quit={fg:#B00 ***} {fg:#F55 Quits:} {indent }{fg:#0DD $nick} {fg:#888 [{fg:#55F $userhost}]} ({i $quitmsg})
 irc.nick={fg:#0DD ***} {fg:#5FF $oldnick} is now known as {fg:#5FF $newnick}
 irc.topic={fg:#55F ***} {fg:#0DD {fg:#5FF Topic} change by {fg:#5FF $nick} on {fg:#5F5 $channel}:} {indent $topic}
+irc.topic_is={fg:#55F ***} {fg:#0DD {fg:#5FF Topic} on {fg:#5F5 $channel} is:} {indent $topic}
+irc.topic_by={fg:#55F ***} {fg:#0DD {fg:#5FF Topic} on {fg:#5F5 $channel} set by {fg:#55F $topic_by} on $timestamp}
 irc.mode={fg:#0DD ***} {fg:#5FF Mode} change for {fg:#5F5 $channel} by {fg:#5FF $moder}: {fg:#5FF $mode}
 irc.mode_is={fg:#0DD ***} {fg:#5FF Mode} for {fg:#5F5 $channel}: {indent }{fg:#5FF $mode}
 irc.msg={fg:#D8D <{fg:white $nick}>} {indent $text}

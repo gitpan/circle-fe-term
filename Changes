@@ -1,5 +1,9 @@
 Revision history for Circle-FE-Term
 
+0.131670 CHANGES:
+         * Theme templates for new IRC events
+         * Display a 'pending' counter display until BE confirms sent commands
+
 0.131340 CHANGES:
          * Updated for Tickit 0.32:
             + Widget attributes from Tickit::Style
