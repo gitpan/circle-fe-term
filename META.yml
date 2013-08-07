@@ -4,7 +4,7 @@ author:
   - 'Paul Evans <leonerd@leonerd.org.uk>'
 build_requires: {}
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4001, CPAN::Meta::Converter version 2.120921'
+generated_by: 'Module::Build version 0.4005, CPAN::Meta::Converter version 2.120921'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -13,7 +13,7 @@ name: circle-fe-term
 provides:
   Circle::FE::Term:
     file: lib/Circle/FE/Term.pm
-    version: 0.131670
+    version: 0.132180
   Circle::FE::Term::Ribbon:
     file: lib/Circle/FE/Term/Ribbon.pm
     version: 0
@@ -50,7 +50,7 @@ requires:
   String::Tagged: 0
   Tangence::ObjectProxy: 0.18
   Text::Balanced: 0
-  Tickit: 0.32
+  Tickit: 0.37
   Tickit::Async: 0
   Tickit::Term: 0.27
   Tickit::Widget::Entry: 0.20
@@ -60,4 +60,4 @@ requires:
   Tickit::Widget::VBox: 0.31
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.131670
+version: 0.132180

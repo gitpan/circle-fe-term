@@ -117,10 +117,6 @@ sub build
 
          return 1;
       },
-      Tab => sub {
-         my $widget = shift;
-         $widget->tab_complete;
-      },
    );
 
    $widget->{obj} = $obj;
@@ -129,7 +125,7 @@ sub build
 }
 
 Tickit::Style->load_style( <<'EOF' );
-Entry.topic {
+Circle::FE::Term::Widget::Entry::Widget.topic {
   bg: "blue";
 }
 
@@ -138,6 +134,17 @@ EOF
 package Circle::FE::Term::Widget::Entry::Widget;
 
 use base qw( Tickit::Widget::Entry );
+
+use Tickit::Style;
+
+use constant KEYPRESSES_FROM_STYLE => 1;
+
+style_definition base =>
+   '<Tab>' => "tab_complete",
+   # Copy from Tickit::Widget::Entry - TODO Have Tickit::Style do this automatically
+   more_fg    => "cyan",
+   more_left  => "<..",
+   more_right => "..>";
 
 use Tickit::Utils qw( textwidth );
 use List::Util qw( max );
@@ -171,21 +178,21 @@ sub on_key
 
    if( $redo_tab_complete ) {
       if( $_[0] eq "text" or $_[1] eq "Backspace" ) {
-         $self->tab_complete;
+         $self->key_tab_complete;
       }
    }
 
    return $ret;
 }
 
-sub tab_complete
+sub key_tab_complete
 {
    my $widget = shift;
 
    my $obj = $widget->{obj};
 
    my ( $partial ) = substr( $widget->text, 0, $widget->position ) =~ m/(\S*)$/;
-   my $plen = length $partial or return;
+   my $plen = length $partial or return 1;
 
    my $at_sol = ( $widget->position - $plen ) == 0;
 
@@ -200,7 +207,7 @@ sub tab_complete
       $matchgroup = $group if @more;
    }
 
-   return unless @matches;
+   return 1 unless @matches;
 
    my $add = $matches[0];
    foreach my $more ( @matches[1..$#matches] ) {
@@ -208,7 +215,7 @@ sub tab_complete
       my $diffpos = 1;
       $diffpos++ while lc substr( $add, 0, $diffpos ) eq lc substr( $more, 0, $diffpos );
 
-      return if $diffpos == 1;
+      return 1 if $diffpos == 1;
 
       $add = substr( $add, 0, $diffpos - 1 );
    }
@@ -262,6 +269,8 @@ sub tab_complete
 
       $widget->{tab_complete_popup} = $popup;
    }
+
+   return 1;
 }
 
 sub send_pending

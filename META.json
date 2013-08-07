@@ -4,7 +4,7 @@
       "Paul Evans <leonerd@leonerd.org.uk>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4001, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Build version 0.4005, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -24,7 +24,7 @@
             "String::Tagged" : "0",
             "Tangence::ObjectProxy" : "0.18",
             "Text::Balanced" : "0",
-            "Tickit" : "0.32",
+            "Tickit" : "0.37",
             "Tickit::Async" : "0",
             "Tickit::Term" : "0.27",
             "Tickit::Widget::Entry" : "0.20",
@@ -38,7 +38,7 @@
    "provides" : {
       "Circle::FE::Term" : {
          "file" : "lib/Circle/FE/Term.pm",
-         "version" : "0.131670"
+         "version" : "0.132180"
       },
       "Circle::FE::Term::Ribbon" : {
          "file" : "lib/Circle/FE/Term/Ribbon.pm",
@@ -83,5 +83,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.131670"
+   "version" : "0.132180"
 }

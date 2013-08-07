@@ -1,5 +1,8 @@
 Revision history for Circle-FE-Term
 
+0.132180 CHANGES:
+         * Fix Entry widget's Tab complete logic for Tickit 0.37
+
 0.131670 CHANGES:
          * Theme templates for new IRC events
          * Display a 'pending' counter display until BE confirms sent commands
