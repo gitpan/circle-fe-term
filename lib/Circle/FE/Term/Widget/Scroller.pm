@@ -7,6 +7,7 @@ package Circle::FE::Term::Widget::Scroller;
 use strict;
 use feature qw( switch );
 use constant type => "Scroller";
+no if $] >= 5.017011, warnings => 'experimental::smartmatch';
 
 use Circle::FE::Term;
 

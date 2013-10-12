@@ -1,6 +1,6 @@
 #  You may distribute under the terms of the GNU General Public License
 #
-#  (C) Paul Evans, 2012 -- leonerd@leonerd.org.uk
+#  (C) Paul Evans, 2012-2013 -- leonerd@leonerd.org.uk
 
 package Circle::FE::Term::Ribbon;
 
@@ -13,9 +13,11 @@ package Circle::FE::Term::Ribbon::horizontal;
 use base qw( Circle::FE::Term::Ribbon );
 
 use feature qw( switch );
+no if $] >= 5.017011, warnings => 'experimental::smartmatch';
 
 use Tickit::Utils qw( textwidth );
 use List::Util qw( max first );
+Tickit::Widget->VERSION( '0.35' ); # ->render_to_rb
 
 use Tickit::WidgetRole::Penable name => "activity", default => { fg => "cyan" };
 
@@ -32,26 +34,26 @@ sub new
 sub lines { 1 }
 sub cols  { 1 }
 
-sub render
+sub render_to_rb
 {
    my $self = shift;
-   my %args = @_;
+   my ( $rb, $rect ) = @_;
 
    my $win = $self->window or return;
 
    my @tabs = $self->tabs;
    my $active = $self->active_tab;
 
-   $win->goto( 0, 0 );
+   $rb->goto( 0, 0 );
 
    my $col = 0;
    my $printed;
 
    if( $active ) {
-      $win->print( $printed = $active->index + 1, $active->pen );
+      $rb->text( $printed = $active->index + 1, $active->pen );
       $col += textwidth $printed;
 
-      $win->print( $printed = sprintf ":%s | ", $active->label );
+      $rb->text( $printed = sprintf ":%s | ", $active->label );
       $col += textwidth $printed;
    }
 
@@ -108,7 +110,7 @@ sub render
          next unless my $level = $tab->level;
 
          my $label;
-         
+
          for( $format ) {
             $label =             sprintf "%d:%s", $idx + 1, $tab->label;
             when( 0 ) { ; }
@@ -120,27 +122,33 @@ sub render
             when( 5 ) { $label = sprintf "%d", $idx + 1 }
          }
 
-         if( !$first ) {
-            $win->print( ",", $self->activity_pen );
-            $col++;
+         {
+            $rb->savepen;
+
+            if( !$first ) {
+               $rb->setpen( $self->activity_pen );
+               $rb->text( "," );
+               $col++;
+            }
+
+            $rb->setpen( $tab->pen );
+            $rb->text( $label );
+            my $width = textwidth $label;
+
+            push @tabpos, [ $idx, $col, $width ]; 
+
+            $col += $width;
+
+            $rb->restore;
          }
-
-         $win->print( $label, $tab->pen );
-         my $width = textwidth $label;
-
-         push @tabpos, [ $idx, $col, $width ]; 
-
-         $col += $width;
 
          $first = 0;
       }
    }
 
-   if( ( my $spare = $win->cols - $col - $rhswidth ) > 0 ) {
-      $win->erasech( $spare, 1 );
-   }
+   $rb->erase_to( $win->cols - $rhswidth );
 
-   $win->print( $rhs );
+   $rb->text( $rhs );
 }
 
 sub scroll_to_visible { }

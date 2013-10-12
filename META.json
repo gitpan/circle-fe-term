@@ -4,7 +4,7 @@
       "Paul Evans <leonerd@leonerd.org.uk>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4005, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Build version 0.4007, CPAN::Meta::Converter version 2.132661",
    "license" : [
       "perl_5"
    ],
@@ -38,43 +38,34 @@
    "provides" : {
       "Circle::FE::Term" : {
          "file" : "lib/Circle/FE/Term.pm",
-         "version" : "0.132180"
+         "version" : "0.132840"
       },
       "Circle::FE::Term::Ribbon" : {
-         "file" : "lib/Circle/FE/Term/Ribbon.pm",
-         "version" : 0
+         "file" : "lib/Circle/FE/Term/Ribbon.pm"
       },
       "Circle::FE::Term::Ribbon::horizontal" : {
-         "file" : "lib/Circle/FE/Term/Ribbon.pm",
-         "version" : 0
+         "file" : "lib/Circle/FE/Term/Ribbon.pm"
       },
       "Circle::FE::Term::Tab" : {
-         "file" : "lib/Circle/FE/Term/Tab.pm",
-         "version" : 0
+         "file" : "lib/Circle/FE/Term/Tab.pm"
       },
       "Circle::FE::Term::Widget::Box" : {
-         "file" : "lib/Circle/FE/Term/Widget/Box.pm",
-         "version" : 0
+         "file" : "lib/Circle/FE/Term/Widget/Box.pm"
       },
       "Circle::FE::Term::Widget::Entry" : {
-         "file" : "lib/Circle/FE/Term/Widget/Entry.pm",
-         "version" : 0
+         "file" : "lib/Circle/FE/Term/Widget/Entry.pm"
       },
       "Circle::FE::Term::Widget::Entry::Widget" : {
-         "file" : "lib/Circle/FE/Term/Widget/Entry.pm",
-         "version" : 0
+         "file" : "lib/Circle/FE/Term/Widget/Entry.pm"
       },
       "Circle::FE::Term::Widget::Label" : {
-         "file" : "lib/Circle/FE/Term/Widget/Label.pm",
-         "version" : 0
+         "file" : "lib/Circle/FE/Term/Widget/Label.pm"
       },
       "Circle::FE::Term::Widget::Scroller" : {
-         "file" : "lib/Circle/FE/Term/Widget/Scroller.pm",
-         "version" : 0
+         "file" : "lib/Circle/FE/Term/Widget/Scroller.pm"
       },
       "Circle::FE::Term::Widget::Scroller::Widget" : {
-         "file" : "lib/Circle/FE/Term/Widget/Scroller.pm",
-         "version" : 0
+         "file" : "lib/Circle/FE/Term/Widget/Scroller.pm"
       }
    },
    "release_status" : "stable",
@@ -83,5 +74,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.132180"
+   "version" : "0.132840"
 }

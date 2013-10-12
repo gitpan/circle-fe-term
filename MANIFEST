@@ -15,3 +15,4 @@ META.json
 META.yml
 README
 share/circle-fe-term.theme
+t/00use.t

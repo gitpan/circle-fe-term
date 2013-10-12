@@ -1,5 +1,11 @@
 Revision history for Circle-FE-Term
 
+0.132840  2013/10/12 22:32:37
+        [CHANGES]
+         * Quiet the experimental::smartmatch warnings
+         * Updated to use Tickit::Widget 0.35's ->render_to_rb and not the
+           now-deprecated ->render
+
 0.132180 CHANGES:
          * Fix Entry widget's Tab complete logic for Tickit 0.37
 

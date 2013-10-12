@@ -7,6 +7,7 @@ package Circle::FE::Term::Tab;
 use strict;
 use warnings;
 
+use Tickit::Widget::Tabbed;
 use base qw( Tickit::Widget::Tabbed::Tab );
 Tickit::Widget::Tabbed->VERSION( '0.008' );
 
