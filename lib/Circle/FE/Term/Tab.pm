@@ -87,7 +87,7 @@ sub build_widget
       return $type->build( $obj, $self );
    }
 
-   die "Cannot build widget for $obj as I don't recognise its type - " . join( ", ", $obj->proxy_isa ) . "\n";
+   die "Cannot build widget for $obj as I don't recognise its type - " . join( ", ", map { $_->name } $obj->proxy_isa ) . "\n";
 }
 
 sub level

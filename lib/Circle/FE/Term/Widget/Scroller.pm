@@ -1,6 +1,6 @@
 #  You may distribute under the terms of the GNU General Public License
 #
-#  (C) Paul Evans, 2010-2013 -- leonerd@leonerd.org.uk
+#  (C) Paul Evans, 2010-2014 -- leonerd@leonerd.org.uk
 
 package Circle::FE::Term::Widget::Scroller;
 
@@ -38,35 +38,16 @@ sub build
       last_datestamp_top => "",
    };
 
-   # Fetch in chunks of the height of the window, so the first chunk looks instant
-   my $chunksize = $tab->widget->window->lines;
-   my $iter;
-   my $idx;
-   my $on_iter_more;
+   $widget->set_on_scrolled( sub { $self->maybe_request_more if $_[1] < 0 } );
 
    $obj->watch_property(
       property => "displayevents",
       iter_from => "last",
       on_iter => sub {
-         ( $iter, undef, my $max ) = @_;
+         ( $self->{iter}, undef, my $max ) = @_;
+         $self->{iter_idx} = $max + 1;
 
-         $on_iter_more = sub {
-            ( $idx, my @more ) = @_;
-            $self->insert_event( top => $_ ) for reverse @more;
-
-            my $remaining = $idx;
-            $remaining = $chunksize if $remaining > $chunksize;
-
-            if( $remaining ) {
-               $iter->next_backward( count => $remaining, on_more => $on_iter_more );
-            }
-            else {
-               undef $iter;
-               undef $on_iter_more;
-            }
-         };
-
-         $on_iter_more->( $max + 1, () );
+         $self->maybe_request_more;
       },
       on_set => sub {
          die "This should not happen\n";
@@ -76,12 +57,48 @@ sub build
       },
       on_shift => sub {
          my ( $count ) = @_;
-         $count -= $idx;
+         $count -= $self->{iter_idx};
          $widget->shift( $count ) if $count > 0;
       },
    );
 
    return $widget;
+}
+
+sub maybe_request_more
+{
+   my $self = shift;
+
+   my $widget = $self->{widget};
+   my $idx    = $self->{iter_idx};
+
+   my $height = $widget->window->lines;
+
+   return if $self->{iter_fetching};
+
+   # Stop if we've got at least 2 screenfuls more, or we're out of things to iterate
+   if( $widget->lines_above > $height * 2 or !$idx ) {
+      $widget->set_loading( 0 );
+      return;
+   }
+
+   my $more = $height * 3;
+   $more = $idx if $more > $idx;
+
+   $self->{iter_fetching} = 1;
+   $widget->set_loading( 1 );
+
+   $self->{iter}->next_backward(
+      count => $more,
+      on_more => sub {
+         ( $self->{iter_idx}, my @more ) = @_;
+
+         $self->{iter_fetching} = 0;
+
+         $self->insert_event( top => $_ ) for reverse @more;
+         $self->maybe_request_more;
+      },
+   );
 }
 
 sub insert_event
@@ -219,14 +236,15 @@ sub _apply_formatting
 package Circle::FE::Term::Widget::Scroller::Widget;
 
 use base qw( Tickit::Widget::Scroller );
-Tickit::Widget::Scroller->VERSION( 0.10 ); # ->unshift
+Tickit::Widget::Scroller->VERSION( 0.15 ); # on_scrolled
 use Tickit::Widget::Scroller::Item::RichText;
 
 sub new
 {
    my $class = shift;
    return $class->SUPER::new( @_,
-      gen_bottom_indicator => "gen_bottom_indicator"
+      gen_bottom_indicator => "gen_bottom_indicator",
+      gen_top_indicator    => "gen_top_indicator",
    );
 }
 
@@ -252,6 +270,17 @@ sub push
    }
 }
 
+sub set_loading
+{
+   my $self = shift;
+   my ( $loading ) = @_;
+
+   return if $loading == ( $self->{loading} // 0 );
+
+   $self->{loading} = $loading;
+   $self->update_indicators;
+}
+
 sub gen_bottom_indicator
 {
    my $self = shift;
@@ -267,6 +296,12 @@ sub gen_bottom_indicator
    else {
       return sprintf "-- +%d --", $below;
    }
+}
+
+sub gen_top_indicator
+{
+   my $self = shift;
+   return $self->{loading} ? "  Loading...  " : undef;
 }
 
 0x55AA;

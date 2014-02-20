@@ -1,6 +1,6 @@
 #  You may distribute under the terms of the GNU General Public License
 #
-#  (C) Paul Evans, 2010-2013 -- leonerd@leonerd.org.uk
+#  (C) Paul Evans, 2010-2014 -- leonerd@leonerd.org.uk
 
 package Circle::FE::Term::Widget::Entry;
 
@@ -134,6 +134,7 @@ EOF
 package Circle::FE::Term::Widget::Entry::Widget;
 
 use base qw( Tickit::Widget::Entry );
+Tickit::Window->VERSION( '0.42' );
 
 use Tickit::Style;
 
@@ -148,6 +149,8 @@ style_definition base =>
 
 use Tickit::Utils qw( textwidth );
 use List::Util qw( max );
+
+use constant PEN_UNDER => Tickit::Pen->new( u => 1 );
 
 sub new
 {
@@ -251,17 +254,16 @@ sub key_tab_complete
 
       $popup->pen->chattrs({ bg => 'green', fg => 'black' });
 
-      $popup->set_on_expose( sub {
-         my $win = shift;
+      $popup->set_on_expose( with_rb => sub {
+         my ( $win, $rb, $rect ) = @_;
          foreach my $line ( 0 .. $#possibles ) {
             my $str = $possibles[$line];
 
-            $win->goto( $line, 0 );
+            $rb->goto( $line, 0 );
 
-            my $col = 0;
-            $col += $win->print( substr( $str, 0, $plen + 1 ), u => 1 )->columns;
-            $col += $win->print( substr( $str, $plen + 1 ) )->columns if length $str > $plen + 1;
-            $win->erasech( $win->cols - $col );
+            $rb->text( substr( $str, 0, $plen + 1 ), PEN_UNDER );
+            $rb->text( substr( $str, $plen + 1 ) ) if length $str > $plen + 1;
+            $rb->erase_to( $win->cols );
          }
       } );
 
@@ -284,10 +286,11 @@ sub send_pending
       my $win = $self->{pending_window} ||= do {
          my $win = $self->window->make_hidden_sub( 0, $self->window->cols - 12, 1, 12 );
          my $countr = \$self->{pending_count};
-         $win->set_on_expose( sub {
-            $win->goto( 0, 0 );
-            my $col = $win->print( "Sending $$countr..." )->columns;
-            $win->erasech( 12 - $col, undef );
+         $win->set_on_expose( with_rb => sub {
+            my ( undef, $rb, $rect ) = @_;
+            $rb->goto( 0, 0 );
+            $rb->text( "Sending $$countr..." );
+            $rb->erase_to( 12 );
          });
          $win->pen->chattrs({ fg => "black", bg => "cyan", i => 1 });
          $win;

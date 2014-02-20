@@ -1,5 +1,11 @@
 Revision history for Circle-FE-Term
 
+0.140500  2014/02/20 15:08:24
+        [CHANGES]
+         * Lazy loading of Scroller content as user scrolls upwards, rather
+           than eagerly at startup
+         * Updated for Tickit 0.42
+
 0.132840  2013/10/12 22:32:37
         [CHANGES]
          * Quiet the experimental::smartmatch warnings

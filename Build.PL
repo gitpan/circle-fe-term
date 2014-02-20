@@ -19,9 +19,10 @@ my $build = Module::Build->new(
       'Tickit::Term' => '0.27',
       'Tickit::Widget::Entry' => '0.20',
       'Tickit::Widget::HBox' => '0.32',
-      'Tickit::Widget::Scroller' => '0.10',
+      'Tickit::Widget::Scroller' => '0.15',
       'Tickit::Widget::Tabbed' => '0.008',
       'Tickit::Widget::VBox' => '0.31',
+      'Tickit::Window' => '0.42',
    },
    auto_configure_requires => 0, # Don't add M::B to configure_requires
    share_dir => {

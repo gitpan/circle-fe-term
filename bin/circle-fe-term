@@ -88,10 +88,9 @@ my $esc_held;
 my $esc_indicator_window =$t->rootwin->make_float( 0, 0, 1, 4 );
 $esc_indicator_window->hide;
 $esc_indicator_window->pen->chattr( rv => 1 );
-$esc_indicator_window->set_on_expose( sub {
-   my $win = shift;
-   $win->goto( 0, 0 );
-   $win->print( "ESC-" );
+$esc_indicator_window->set_on_expose( with_rb => sub {
+   my ( undef, $rb, $rect ) = @_;
+   $rb->text_at( 0, 0, "ESC-" );
 } );
 my $esc_timer = IO::Async::Timer::Countdown->new(
    delay => 3,
