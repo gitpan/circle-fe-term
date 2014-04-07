@@ -15,6 +15,7 @@ WriteMakefile
                    'Text::Balanced' => 0,
                    'Tickit' => '0.37',
                    'Tickit::Async' => 0,
+                   'Tickit::Style' => '0.40',
                    'Tickit::Term' => '0.27',
                    'Tickit::Widget::Entry' => '0.20',
                    'Tickit::Widget::HBox' => '0.32',

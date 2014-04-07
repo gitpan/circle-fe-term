@@ -136,16 +136,12 @@ package Circle::FE::Term::Widget::Entry::Widget;
 use base qw( Tickit::Widget::Entry );
 Tickit::Window->VERSION( '0.42' );
 
-use Tickit::Style;
+use Tickit::Style -copy;
 
 use constant KEYPRESSES_FROM_STYLE => 1;
 
 style_definition base =>
-   '<Tab>' => "tab_complete",
-   # Copy from Tickit::Widget::Entry - TODO Have Tickit::Style do this automatically
-   more_fg    => "cyan",
-   more_left  => "<..",
-   more_right => "..>";
+   '<Tab>' => "tab_complete";
 
 use Tickit::Utils qw( textwidth );
 use List::Util qw( max );

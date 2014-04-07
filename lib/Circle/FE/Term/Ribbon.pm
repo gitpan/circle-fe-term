@@ -19,17 +19,12 @@ use Tickit::Utils qw( textwidth );
 use List::Util qw( max first );
 Tickit::Widget->VERSION( '0.35' ); # ->render_to_rb
 
-use Tickit::WidgetRole::Penable name => "activity", default => { fg => "cyan" };
+use Tickit::Style;
 
-sub new
-{
-   my $class = shift;
-   my $self = $class->SUPER::new( @_ );
+style_definition base =>
+   activity_fg => "cyan";
 
-   $self->_init_activity_pen;
-
-   return $self;
-}
+use constant orientation => "horizontal";
 
 sub lines { 1 }
 sub cols  { 1 }
@@ -126,7 +121,7 @@ sub render_to_rb
             $rb->savepen;
 
             if( !$first ) {
-               $rb->setpen( $self->activity_pen );
+               $rb->setpen( $self->get_style_pen( "activity" ) );
                $rb->text( "," );
                $col++;
             }
