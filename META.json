@@ -4,7 +4,7 @@
       "Paul Evans <leonerd@leonerd.org.uk>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4203",
+   "generated_by" : "Module::Build version 0.4205",
    "license" : [
       "perl_5"
    ],
@@ -39,7 +39,7 @@
    "provides" : {
       "Circle::FE::Term" : {
          "file" : "lib/Circle/FE/Term.pm",
-         "version" : "0.140500"
+         "version" : "0.140960"
       },
       "Circle::FE::Term::Ribbon" : {
          "file" : "lib/Circle/FE/Term/Ribbon.pm"
@@ -75,5 +75,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.140500"
+   "version" : "0.140960"
 }

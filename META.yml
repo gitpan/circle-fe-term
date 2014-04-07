@@ -4,16 +4,16 @@ author:
   - 'Paul Evans <leonerd@leonerd.org.uk>'
 build_requires: {}
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4203, CPAN::Meta::Converter version 2.133380'
+generated_by: 'Module::Build version 0.4205, CPAN::Meta::Converter version 2.133380'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  version: '1.4'
 name: circle-fe-term
 provides:
   Circle::FE::Term:
     file: lib/Circle/FE/Term.pm
-    version: 0.140500
+    version: '0.140960'
   Circle::FE::Term::Ribbon:
     file: lib/Circle/FE/Term/Ribbon.pm
   Circle::FE::Term::Ribbon::horizontal:
@@ -33,23 +33,23 @@ provides:
   Circle::FE::Term::Widget::Scroller::Widget:
     file: lib/Circle/FE/Term/Widget/Scroller.pm
 requires:
-  Convert::Color: 0.06
-  Convert::Color::XTerm: 0
-  File::ShareDir: 1.00
-  IO::Async: 0.14
-  Net::Async::Tangence::Client: 0.08
-  String::Tagged: 0
-  Tangence::ObjectProxy: 0.18
-  Text::Balanced: 0
-  Tickit: 0.37
-  Tickit::Async: 0
-  Tickit::Term: 0.27
-  Tickit::Widget::Entry: 0.20
-  Tickit::Widget::HBox: 0.32
-  Tickit::Widget::Scroller: 0.15
-  Tickit::Widget::Tabbed: 0.008
-  Tickit::Widget::VBox: 0.31
-  Tickit::Window: 0.42
+  Convert::Color: '0.06'
+  Convert::Color::XTerm: '0'
+  File::ShareDir: '1.00'
+  IO::Async: '0.14'
+  Net::Async::Tangence::Client: '0.08'
+  String::Tagged: '0'
+  Tangence::ObjectProxy: '0.18'
+  Text::Balanced: '0'
+  Tickit: '0.37'
+  Tickit::Async: '0'
+  Tickit::Term: '0.27'
+  Tickit::Widget::Entry: '0.20'
+  Tickit::Widget::HBox: '0.32'
+  Tickit::Widget::Scroller: '0.15'
+  Tickit::Widget::Tabbed: '0.008'
+  Tickit::Widget::VBox: '0.31'
+  Tickit::Window: '0.42'
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.140500
+version: '0.140960'

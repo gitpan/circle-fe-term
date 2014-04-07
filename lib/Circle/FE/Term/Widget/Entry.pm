@@ -169,6 +169,8 @@ sub new
 sub on_key
 {
    my $self = shift;
+   my ( $ev ) = @_;
+
    $self->{tab}->activated;
 
    my $redo_tab_complete;
@@ -180,7 +182,7 @@ sub on_key
    my $ret = $self->SUPER::on_key( @_ );
 
    if( $redo_tab_complete ) {
-      if( $_[0] eq "text" or $_[1] eq "Backspace" ) {
+      if( $ev->type eq "text" or $ev->str eq "Backspace" ) {
          $self->key_tab_complete;
       }
    }

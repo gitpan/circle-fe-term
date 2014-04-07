@@ -176,13 +176,13 @@ my $tab_shortcuts = "1234567890" .
 sub on_key
 {
    my $self = shift;
-   my ( $type, $str ) = @_;
+   my ( $ev ) = @_;
 
-   if( $type eq "key" and $str eq "M-a" ) {
+   if( $ev->type eq "key" and $ev->str eq "M-a" ) {
       $self->activate_next;
       return 1;
    }
-   elsif( $type eq "key" and $str =~ m/^M-(.)$/ and
+   elsif( $ev->type eq "key" and $ev->str =~ m/^M-(.)$/ and
           ( my $idx = index $tab_shortcuts, $1 ) > -1 ) {
       eval { $self->activate_tab( $idx ) }; # ignore croak on invalid index
       return 1;
@@ -194,18 +194,18 @@ sub on_key
 sub on_mouse
 {
    my $self = shift;
-   my ( $ev, $button, $line, $col ) = @_;
+   my ( $ev ) = @_;
 
-   return 0 unless $line == 0;
+   return 0 unless $ev->line == 0;
 
-   if( $ev eq "press" and $button == 1 ) {
+   if( $ev->type eq "press" and $ev->button == 1 ) {
       foreach my $pos ( @{ $self->{tabpos} } ) {
-         $self->activate_tab( $pos->[0] ), return 1 if $col >= $pos->[1] and $col < $pos->[1] + $pos->[2];
+         $self->activate_tab( $pos->[0] ), return 1 if $ev->col >= $pos->[1] and $ev->col < $pos->[1] + $pos->[2];
       }
    }
-   elsif( $ev eq "wheel" ) {
-      $self->prev_tab if $button eq "up";
-      $self->next_tab if $button eq "down";
+   elsif( $ev->type eq "wheel" ) {
+      $self->prev_tab if $ev->button eq "up";
+      $self->next_tab if $ev->button eq "down";
       return 1;
    }
 }
